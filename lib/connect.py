@@ -1,7 +1,7 @@
 from requests import exceptions
 import requests
 
-def checkNetwork(url, timeout):
+def checkNetwork(url:str='https//google.com', timeout:int=5):
     try:
         requests.get(url, timeout=timeout)
         return True

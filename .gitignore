@@ -3,3 +3,4 @@ venv/
 tests/
 lib/__pycache__
 __pycache__/
+README/
