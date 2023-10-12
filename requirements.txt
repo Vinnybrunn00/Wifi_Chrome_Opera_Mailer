@@ -12,3 +12,4 @@ requests==2.31.0
 shellescape==3.8.1
 urllib3==2.0.6
 pyinstaller==6.0.0
+pillow==10.0.1

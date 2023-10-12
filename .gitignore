@@ -4,3 +4,6 @@ tests/
 lib/__pycache__
 __pycache__/
 README/
+main.spec
+build/
+dist/

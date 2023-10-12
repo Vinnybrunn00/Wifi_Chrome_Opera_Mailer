@@ -1,7 +1,8 @@
 from lib.ssw import GeoLocation
 import os
 
-locate = GeoLocation('409adf0f8bcf4b96bb3d5df44d235f61')
+# create an API key for this resource here > https://ipgeolocation.io/
+locate = GeoLocation('YOUR_API_KEY') 
 
 subject_text = f'''
     Name PC: {os.getlogin()} ||

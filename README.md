@@ -11,5 +11,5 @@
 ## Building executable
 
 ```bash
-> pyinstaller --onefile --noconsole --icon=assets/image/readme.png main.py
+> pyinstaller --onefile --noconsole --icon=assets/image/TES.png main.py
 ```
